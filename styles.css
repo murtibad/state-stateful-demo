@@ -1,0 +1,663 @@
+/* ============================================
+   DURUM (State) & DURUMLU (Stateful) Demo - Stil Dosyası
+   Eğitim amaçlı demo için temiz ve okunabilir stiller
+   ============================================ */
+
+/* Tema için CSS Değişkenleri */
+:root {
+    --bg-primary: #f5f7fa;
+    --bg-secondary: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --accent: #4361ee;
+    --accent-hover: #3a56d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --border: #e2e8f0;
+    --code-bg: #f1f5f9;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --student-panel-width: 280px;
+}
+
+/* Koyu tema */
+body.dark-theme {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border: #334155;
+    --code-bg: #0f172a;
+}
+
+/* Sıfırlama & Temel */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* ============================================
+   ÖĞRENCİ BİLGİLERİ PANELİ
+   ============================================ */
+.student-panel {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: var(--student-panel-width);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    z-index: 1000;
+}
+
+.student-panel h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.student-panel ul {
+    list-style: none;
+}
+
+.student-panel li {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+.student-panel strong {
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.8;
+    margin-bottom: 0.1rem;
+}
+
+/* Ana içerik için sağ margin (masaüstünde panel için yer açmak) */
+@media (min-width: 1024px) {
+    main {
+        margin-right: calc(var(--student-panel-width) + 40px);
+    }
+}
+
+/* Mobil için öğrenci paneli */
+@media (max-width: 1023px) {
+    .student-panel {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        border-radius: 8px;
+    }
+
+    .student-panel ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.5rem;
+    }
+}
+
+/* Başlık */
+header {
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+/* Ana İçerik */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Kart Bölümleri */
+.card {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.card h2 {
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.section-description {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* Kavram Kutuları (Genel Bakış Bölümü) */
+.concept-box {
+    background: var(--code-bg);
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.5rem;
+    margin: 1rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.concept-box h3 {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.example {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(67, 97, 238, 0.1);
+    border-radius: 4px;
+}
+
+/* Kontrol Grid'i */
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.control-item {
+    background: var(--code-bg);
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.control-item h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.explanation {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.stateful-note {
+    font-size: 0.85rem;
+    color: var(--success);
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
+/* Sayaç */
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.counter-value {
+    font-size: 2rem;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    color: var(--accent);
+}
+
+/* Butonlar */
+.btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+}
+
+/* Select Girişi */
+.select-input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Toggle */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.toggle-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.timer-display {
+    font-size: 0.9rem;
+    color: var(--warning);
+    margin-top: 0.5rem;
+}
+
+/* Çekim Kontrolleri */
+.fetch-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.fetch-hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+}
+
+/* API Grid */
+.api-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.api-card {
+    background: var(--code-bg);
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+
+.api-card.loading {
+    border-color: var(--warning);
+}
+
+.api-card.success {
+    border-color: var(--success);
+}
+
+.api-card.error {
+    border-color: var(--error);
+}
+
+.api-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+}
+
+.api-header h4 {
+    margin: 0;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--border);
+    color: var(--text-secondary);
+}
+
+.status-badge.loading {
+    background: var(--warning);
+    color: white;
+}
+
+.status-badge.success {
+    background: var(--success);
+    color: white;
+}
+
+.status-badge.error {
+    background: var(--error);
+    color: white;
+}
+
+.api-content {
+    padding: 1rem;
+    min-height: 120px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.placeholder-text {
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.api-meta {
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+/* Genel Durum */
+.global-status {
+    text-align: center;
+    padding: 1rem;
+    background: var(--code-bg);
+    border-radius: 8px;
+}
+
+#global-status {
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+#fetch-count {
+    margin-left: 0.5rem;
+    color: var(--text-secondary);
+}
+
+/* Durum Denetçisi */
+.inspector-note {
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--success);
+    margin-bottom: 1rem;
+    border-radius: 0 6px 6px 0;
+}
+
+.state-display {
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#state-json {
+    color: #9cdcfe;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+/* API Tablosu */
+.api-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.api-table th,
+.api-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border: 1px solid var(--border);
+}
+
+.api-table th {
+    background: var(--accent);
+    color: white;
+}
+
+.api-table td {
+    background: var(--bg-secondary);
+}
+
+.api-table code {
+    background: var(--code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.api-notes {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--code-bg);
+    border-radius: 8px;
+}
+
+.api-notes h4 {
+    margin-bottom: 0.5rem;
+}
+
+.api-notes ul {
+    margin-left: 1.5rem;
+}
+
+.api-notes li {
+    margin: 0.5rem 0;
+}
+
+/* Satır içi kod */
+code {
+    background: var(--code-bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+/* Yükleniyor Döndürücü */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Gönderi Öğesi */
+.post-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.post-item:last-child {
+    border-bottom: none;
+}
+
+.post-item strong {
+    color: var(--accent);
+}
+
+/* Hava Durumu Görüntüsü */
+.weather-info {
+    text-align: center;
+}
+
+.weather-temp {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.weather-details {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+
+/* Fıkra Görüntüsü */
+.joke-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* Hata Mesajı */
+.error-message {
+    color: var(--error);
+    text-align: center;
+    padding: 1rem;
+}
+
+/* ============================================
+   MİKRO MİMARİ BÖLÜMÜ STİLLERİ
+   ============================================ */
+.architecture-section {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--code-bg));
+}
+
+.architecture-diagram {
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.folder-structure {
+    color: #9cdcfe;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre;
+}
+
+.architecture-explanation {
+    margin-top: 1.5rem;
+}
+
+.architecture-explanation h4 {
+    color: var(--accent);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.architecture-explanation ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.architecture-explanation li {
+    margin: 0.4rem 0;
+}
+
+.layer-summary {
+    margin-top: 1.5rem;
+}
+
+.layer-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.layer-table th,
+.layer-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border: 1px solid var(--border);
+}
+
+.layer-table th {
+    background: var(--accent);
+    color: white;
+}
+
+.layer-table td {
+    background: var(--bg-secondary);
+}
+
+.layer-table code {
+    background: var(--code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Duyarlı Tasarım */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .api-table {
+        font-size: 0.85rem;
+    }
+
+    .api-table th,
+    .api-table td {
+        padding: 0.5rem;
+    }
+}

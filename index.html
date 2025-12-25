@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Web geliştirmede DURUM (State) ve DURUMLU (Stateful) kavramlarının 3 paralel API çağrısı ile gösterimi - Mikro Mimari Yapısı">
+    <title>DURUM (State) & DURUMLU (Stateful) Demo - Mikro Mimari</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- ÖĞRENCİ BİLGİLERİ PANELİ -->
+    <aside id="student-info-panel" class="student-panel">
+        <h3>📋 Öğrenci Bilgileri</h3>
+        <ul>
+            <li><strong>Ad Soyad:</strong> Murat Tokaç</li>
+            <li><strong>Öğrenci No:</strong> 25370201029</li>
+            <li><strong>Bölüm:</strong> Arka Yüz Yazılım Geliştirme</li>
+            <li><strong>Ders:</strong> Bulut Bilişim Mimarileri</li>
+            <li><strong>Öğretim Görevlisi:</strong> Öğr. Gör. Volkan Cantemir</li>
+        </ul>
+    </aside>
+
+    <header>
+        <h1>🔄 DURUM (State) & DURUMLU (Stateful) Demo</h1>
+        <p class="subtitle">3 paralel API çağrısı ile durum yönetimi gösterimi - Mikro Mimari Yapısı</p>
+    </header>
+
+    <main>
+        <!-- BÖLÜM A: Genel Bakış -->
+        <section id="overview" class="card">
+            <h2>📚 A) DURUM (State) ve DURUMLU (Stateful) Nedir?</h2>
+
+            <div class="concept-box">
+                <h3>🔹 DURUM (State)</h3>
+                <p><strong>"Durum (State)", uygulamanızın herhangi bir anda tuttuğu mevcut veri/değerlerdir.</strong>
+                </p>
+                <p>Buna şunlar dahildir: kullanıcı girdileri, API'den çekilen veriler, yükleniyor göstergeleri, hata
+                    mesajları, zaman damgaları, sayaçlar ve diğer tüm dinamik değerler.</p>
+                <p class="example">➡️ <em>Örnek: Aşağıdaki sayaç değeri bir "durum (state)" parçasıdır. Şu anda
+                        değişebilen bir sayı gösteriyor.</em></p>
+            </div>
+
+            <div class="concept-box">
+                <h3>🔹 DURUMLU (Stateful)</h3>
+                <p><strong>"Durumlu (Stateful)", uygulamanın durum değişikliklerini HATIRLAYIP bunlara TEPKİ VERMESİ
+                        demektir.</strong></p>
+                <p>Durumlu bir bileşen/sayfa, durum değiştiğinde görüntüsünü günceller ve kullanıcı etkileşimleri
+                    arasında değerleri saklayabilir.</p>
+                <p class="example">➡️ <em>Örnek: Aşağıdaki otomatik yenileme düğmesi "durumlu (stateful)"dır çünkü açıp
+                        kapadığınızı hatırlar ve uygulama bu hafızaya göre farklı davranır.</em></p>
+            </div>
+        </section>
+
+        <!-- BÖLÜM B: Durumlu Kontroller -->
+        <section id="stateful-controls" class="card">
+            <h2>🎮 B) DURUMLU (Stateful) Kontroller</h2>
+            <p class="section-description">Bu kontroller uygulamanın DURUMUNU (State) değiştirir. "Durum Denetçisi"
+                panelinin gerçek zamanlı güncellenmesini izleyin!</p>
+
+            <div class="controls-grid">
+                <!-- Sayaç -->
+                <div class="control-item">
+                    <h4>Sayaç (Durum Değişkeni)</h4>
+                    <p class="explanation">Bu bir durumdur (state): <code>counter</code> bir sayı değeri tutar</p>
+                    <div class="counter-controls">
+                        <button id="btn-decrement" class="btn">−</button>
+                        <span id="counter-display" class="counter-value">0</span>
+                        <button id="btn-increment" class="btn">+</button>
+                    </div>
+                    <p class="stateful-note">Durumlu (stateful) çünkü: tıklamalar arasında sayıyı hatırlar</p>
+                </div>
+
+                <!-- Tema Seçici -->
+                <div class="control-item">
+                    <h4>Tema Seçici (Durum Değişkeni)</h4>
+                    <p class="explanation">Bu bir durumdur (state): <code>theme</code> "açık" veya "koyu" değerini
+                        saklar</p>
+                    <select id="theme-selector" class="select-input">
+                        <option value="light">☀️ Açık Tema</option>
+                        <option value="dark">🌙 Koyu Tema</option>
+                    </select>
+                    <p class="stateful-note">Durumlu (stateful) çünkü: tema seçiminizi hatırlar</p>
+                </div>
+
+                <!-- Otomatik Yenileme Düğmesi -->
+                <div class="control-item">
+                    <h4>Otomatik Yenileme (Durum Değişkeni)</h4>
+                    <p class="explanation">Bu bir durumdur (state): <code>autoRefresh.enabled</code> true/false değeri
+                        alır</p>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="auto-refresh-toggle">
+                        <span>Her 30 saniyede otomatik yenile</span>
+                    </label>
+                    <p id="next-refresh-display" class="timer-display"></p>
+                    <p class="stateful-note">Durumlu (stateful) çünkü: bir zamanlayıcı kontrol eder ve ayarı hatırlar
+                    </p>
+                </div>
+
+                <!-- Çekim Kontrolleri -->
+                <div class="control-item fetch-controls">
+                    <h4>API Çekim Tetikleyici</h4>
+                    <button id="btn-fetch-all" class="btn btn-primary btn-large">
+                        🚀 Hepsini Çek (3 API Paralel)
+                    </button>
+                    <p class="fetch-hint">3 API'ye eşzamanlı istek göndermek için tıklayın</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM C: API Kontrol Paneli -->
+        <section id="api-dashboard" class="card">
+            <h2>📡 C) Paralel API Çekim Paneli</h2>
+            <p class="section-description">3 API'nin hepsi <code>Promise.allSettled()</code> kullanılarak
+                <strong>eşzamanlı</strong> olarak çekilir. Her kart kendi yükleniyor/başarılı/hata durumunu gösterir.
+            </p>
+
+            <div class="api-grid">
+                <!-- API 1: JSONPlaceholder Gönderiler -->
+                <div class="api-card" id="api-posts">
+                    <div class="api-header">
+                        <h4>📝 JSONPlaceholder Gönderiler</h4>
+                        <span class="status-badge" id="status-posts">Çekilmedi</span>
+                    </div>
+                    <div class="api-content" id="content-posts">
+                        <p class="placeholder-text">Veri yüklemek için "Hepsini Çek" butonuna tıklayın...</p>
+                    </div>
+                    <div class="api-meta">
+                        <small>Son çekim: <span id="time-posts">Henüz hiç</span></small>
+                    </div>
+                </div>
+
+                <!-- API 2: Open-Meteo Hava Durumu -->
+                <div class="api-card" id="api-weather">
+                    <div class="api-header">
+                        <h4>🌤️ Open-Meteo Hava Durumu</h4>
+                        <span class="status-badge" id="status-weather">Çekilmedi</span>
+                    </div>
+                    <div class="api-content" id="content-weather">
+                        <p class="placeholder-text">Veri yüklemek için "Hepsini Çek" butonuna tıklayın...</p>
+                    </div>
+                    <div class="api-meta">
+                        <small>Son çekim: <span id="time-weather">Henüz hiç</span></small>
+                    </div>
+                </div>
+
+                <!-- API 3: Baba Fıkraları -->
+                <div class="api-card" id="api-jokes">
+                    <div class="api-header">
+                        <h4>😂 ICanHazDadJoke (Fıkralar)</h4>
+                        <span class="status-badge" id="status-jokes">Çekilmedi</span>
+                    </div>
+                    <div class="api-content" id="content-jokes">
+                        <p class="placeholder-text">Veri yüklemek için "Hepsini Çek" butonuna tıklayın...</p>
+                    </div>
+                    <div class="api-meta">
+                        <small>Son çekim: <span id="time-jokes">Henüz hiç</span></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genel Durum -->
+            <div class="global-status">
+                <strong>Genel Çekim Durumu:</strong>
+                <span id="global-status">Boşta</span>
+                <span id="fetch-count">(Toplam çekim sayısı: 0)</span>
+            </div>
+        </section>
+
+        <!-- BÖLÜM D: Durum Denetçisi -->
+        <section id="state-inspector" class="card">
+            <h2>🔍 D) DURUM (State) Denetçisi (Canlı JSON Görünümü)</h2>
+            <p class="section-description">Bu panel, <strong>tüm uygulama durumunu (state)</strong> gerçek zamanlı
+                güncellenen bir JSON nesnesi olarak gösterir. Yukarıdaki kontrollerle etkileşim kurduğunuzda değişmesini
+                izleyin!</p>
+            <p class="inspector-note">⚡ Bu, uygulamanın DURUMLU (Stateful) olduğunu kanıtlar: herhangi bir değer
+                değiştiğinde aşağıdaki durum (state) nesnesi gerçek zamanlı olarak güncellenir.</p>
+
+            <div class="state-display">
+                <pre id="state-json">{}</pre>
+            </div>
+        </section>
+
+        <!-- BÖLÜM E: Mikro Mimari Açıklaması -->
+        <section id="micro-architecture" class="card architecture-section">
+            <h2>🏗️ E) Mikro Mimari (Modüler Yapı) Açıklaması</h2>
+            <p class="section-description">Bu proje, <strong>mikro mimari</strong> (modüler yapı) prensiplerine göre
+                tasarlanmıştır. Tek bir monolitik dosya yerine, sorumluluklar farklı katmanlara ayrılmıştır.</p>
+
+            <div class="architecture-diagram">
+                <pre class="folder-structure">
+📁 3api+statestatefull/
+├── 📁 apis/                      ← API Katmanı (Veri Kaynakları)
+│   ├── jsonPlaceholderApi.js     → Sadece JSONPlaceholder ile iletişim
+│   ├── weatherApi.js             → Sadece Open-Meteo ile iletişim
+│   └── jokeApi.js                → Sadece ICanHazDadJoke ile iletişim
+│
+├── 📁 state/                     ← Durum Yönetimi Katmanı
+│   └── appState.js               → Merkezi durum nesnesi ve güncelleme fonksiyonları
+│
+├── 📁 ui/                        ← UI / Görünüm Katmanı
+│   ├── renderCards.js            → API kartlarını ekrana çizer
+│   └── renderStateInspector.js   → Durum denetçisini ve sayaçları çizer
+│
+├── main.js                       ← Kontrolcü / Orkestrasyon Katmanı
+├── index.html                    → Ana HTML sayfası
+├── styles.css                    → CSS stilleri
+└── README.md                     → Dokümantasyon
+                </pre>
+            </div>
+
+            <div class="architecture-explanation">
+                <h4>🔹 Neden API'ler Ayrı Dosyalarda?</h4>
+                <p>Her API kendi dosyasında izole edilmiştir çünkü:</p>
+                <ul>
+                    <li><strong>Tek Sorumluluk:</strong> Her dosya sadece bir API ile ilgilenir</li>
+                    <li><strong>Bakım Kolaylığı:</strong> Bir API değişirse sadece o dosya güncellenir</li>
+                    <li><strong>Test Edilebilirlik:</strong> Her API bağımsız olarak test edilebilir</li>
+                    <li><strong>Yeniden Kullanılabilirlik:</strong> API modülleri başka projelerde kullanılabilir</li>
+                </ul>
+
+                <h4>🔹 Neden Durum (State) Merkezi?</h4>
+                <p>Tüm uygulama durumu tek bir yerde tutulur çünkü:</p>
+                <ul>
+                    <li><strong>Tek Doğruluk Kaynağı:</strong> Durum tutarsızlıkları önlenir</li>
+                    <li><strong>Kontrollü Erişim:</strong> Durum sadece özel fonksiyonlarla değiştirilir</li>
+                    <li><strong>Hata Ayıklama:</strong> Durumu tek noktadan izlemek kolaydır</li>
+                    <li><strong>Öngörülebilirlik:</strong> Uygulama davranışı tahmin edilebilir olur</li>
+                </ul>
+
+                <h4>🔹 Bakım ve Okunabilirlik Nasıl İyileşir?</h4>
+                <p>Modüler yapı sayesinde:</p>
+                <ul>
+                    <li>Her dosya <strong>50-100 satır</strong> civarındadır (anlaşılması kolay)</li>
+                    <li>Yeni geliştirici projeyi hızlıca öğrenebilir</li>
+                    <li>Hata bulma süreci kısalır (sorun hangi katmanda?)</li>
+                    <li>Ekip çalışması kolaylaşır (farklı kişiler farklı katmanlarda çalışabilir)</li>
+                </ul>
+            </div>
+
+            <div class="layer-summary">
+                <table class="layer-table">
+                    <thead>
+                        <tr>
+                            <th>Katman</th>
+                            <th>Dosyalar</th>
+                            <th>Sorumluluk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>API</strong></td>
+                            <td><code>apis/*.js</code></td>
+                            <td>Dış kaynaklardan veri çekme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>State</strong></td>
+                            <td><code>state/appState.js</code></td>
+                            <td>Uygulama verilerini saklama ve yönetme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>UI</strong></td>
+                            <td><code>ui/*.js</code></td>
+                            <td>Ekrana çizim yapma</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Controller</strong></td>
+                            <td><code>main.js</code></td>
+                            <td>Katmanları koordine etme</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- BÖLÜM F: Kullanılan API'ler -->
+        <section id="apis-used" class="card">
+            <h2>📋 F) Kullanılan API'ler</h2>
+            <p class="section-description">Bu demoda kullanılan 3 ücretsiz genel API'nin dokümantasyonu:</p>
+
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>API Adı</th>
+                        <th>Endpoint URL</th>
+                        <th>Gösterilen Veri</th>
+                        <th>Ne Zaman/Nasıl Çekilir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>JSONPlaceholder</strong></td>
+                        <td><code>https://jsonplaceholder.typicode.com/posts?_limit=5</code></td>
+                        <td>5 adet sahte blog gönderi başlığı ve özeti</td>
+                        <td>"Hepsini Çek" tıklandığında, API anahtarı gerekmeden <code>fetch()</code> ile çekilir</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Open-Meteo</strong></td>
+                        <td><code>https://api.open-meteo.com/v1/forecast?latitude=41.01&longitude=28.95&current_weather=true</code>
+                        </td>
+                        <td>İstanbul için anlık hava durumu (sıcaklık, rüzgar hızı, hava kodu)</td>
+                        <td>"Hepsini Çek" tıklandığında, API anahtarı gerekmeden <code>fetch()</code> ile çekilir</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ICanHazDadJoke</strong></td>
+                        <td><code>https://icanhazdadjoke.com/</code></td>
+                        <td>Rastgele bir baba fıkrası (İngilizce - API'den gelen orijinal veri)</td>
+                        <td>"Hepsini Çek" tıklandığında, <code>Accept: application/json</code> başlığı ile, API anahtarı
+                            gerekmeden <code>fetch()</code> ile çekilir</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="api-notes">
+                <h4>Teknik Notlar:</h4>
+                <ul>
+                    <li>3 API'nin hepsi <code>Promise.allSettled()</code> kullanılarak <strong>paralel</strong> olarak
+                        çekilir</li>
+                    <li>Hızlı yeniden çekimlerde devam eden istekleri iptal etmek için <code>AbortController</code>
+                        kullanılır</li>
+                    <li>Her API'nin yanıtı, <code>lastFetchedAt</code> zaman damgası ile birlikte durumda (state)
+                        önbelleğe alınır</li>
+                    <li>Hız sınırlaması ve ağ hataları, hata mesajları ile zarif bir şekilde işlenir</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Eğitim amaçlı oluşturulmuştur | DURUM (State) & DURUMLU (Stateful) + Mikro Mimari | GitHub Pages Dağıtımı</p>
+    </footer>
+
+    <!-- ES Modülleri kullanarak ana kontrolcüyü yükle -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
