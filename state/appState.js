@@ -39,9 +39,12 @@ const state = {
     isFetching: false,
     abortController: null,
 
+    // Seçilen şehir (hava durumu API'si için - STATEFUL)
+    selectedCity: 'istanbul',
+
     // API başına durum (her biri için yükleniyor, başarılı, hata)
     apis: {
-        posts: {
+        users: {
             status: 'idle', // 'idle' | 'loading' | 'success' | 'error'
             data: null,
             error: null,
@@ -63,7 +66,7 @@ const state = {
 
     // Önbellek (son başarılı yanıtları saklar)
     cache: {
-        posts: null,
+        users: null,
         weather: null,
         jokes: null
     }
@@ -160,6 +163,21 @@ export function decrementCounter() {
 export function setTheme(theme) {
     state.theme = theme;
     return state.theme;
+}
+
+/**
+ * Seçilen şehri döndürür.
+ */
+export function getSelectedCity() {
+    return state.selectedCity;
+}
+
+/**
+ * Seçilen şehri değiştirir.
+ */
+export function setSelectedCity(cityKey) {
+    state.selectedCity = cityKey;
+    return state.selectedCity;
 }
 
 /**
@@ -289,11 +307,11 @@ export function getDisplayState() {
         toplamCekimSayisi: state.fetchCount,
         cekimYapiliyor: state.isFetching,
         apiDurumlari: {
-            gonderiler: {
-                durum: TR_STATUS[state.apis.posts.status] || state.apis.posts.status,
-                veriVar: state.apis.posts.data !== null,
-                hata: state.apis.posts.error,
-                sonCekim: state.apis.posts.lastFetchedAt
+            kullanicilar: {
+                durum: TR_STATUS[state.apis.users.status] || state.apis.users.status,
+                veriVar: state.apis.users.data !== null,
+                hata: state.apis.users.error,
+                sonCekim: state.apis.users.lastFetchedAt
             },
             havaDurumu: {
                 durum: TR_STATUS[state.apis.weather.status] || state.apis.weather.status,
@@ -308,15 +326,126 @@ export function getDisplayState() {
                 sonCekim: state.apis.jokes.lastFetchedAt
             }
         },
+        secilenSehir: state.selectedCity,
         onbellek: {
-            gonderiler: state.cache.posts ? '(önbellekte veri var)' : null,
+            kullanicilar: state.cache.users ? '(önbellekte veri var)' : null,
             havaDurumu: state.cache.weather ? '(önbellekte veri var)' : null,
             fikralar: state.cache.jokes ? '(önbellekte veri var)' : null
         }
     };
 }
 
+// ============================================
+// STATE PERSISTENCE (KALICILIK) FONKSİYONLARI
+// ============================================
+
+/**
+ * Kaydedilebilir tam state nesnesini döndürür (serileştirilebilir).
+ * intervalId, abortController gibi fonksiyon/nesne referansları hariç tutulur.
+ */
+export function getFullState() {
+    return {
+        counter: state.counter,
+        theme: state.theme,
+        selectedCity: state.selectedCity,
+        autoRefresh: {
+            enabled: state.autoRefresh.enabled,
+            intervalSeconds: state.autoRefresh.intervalSeconds
+        },
+        fetchCount: state.fetchCount,
+        apis: state.apis,
+        cache: state.cache
+    };
+}
+
+/**
+ * Dışarıdan yüklenen state ile mevcut state'i günceller.
+ * @param {Object} loadedState - localStorage'dan yüklenen state
+ */
+export function restoreState(loadedState) {
+    if (!loadedState) return;
+
+    // Basit değerleri geri yükle
+    if (typeof loadedState.counter === 'number') {
+        state.counter = loadedState.counter;
+    }
+    if (loadedState.theme) {
+        state.theme = loadedState.theme;
+    }
+    if (loadedState.selectedCity) {
+        state.selectedCity = loadedState.selectedCity;
+    }
+    if (typeof loadedState.fetchCount === 'number') {
+        state.fetchCount = loadedState.fetchCount;
+    }
+
+    // Otomatik yenileme ayarlarını geri yükle (zamanlayıcılar hariç)
+    if (loadedState.autoRefresh) {
+        state.autoRefresh.enabled = loadedState.autoRefresh.enabled || false;
+        state.autoRefresh.intervalSeconds = loadedState.autoRefresh.intervalSeconds || 30;
+        // intervalId ve countdownId manuel olarak yeniden başlatılmalı
+    }
+
+    // API durumlarını geri yükle
+    if (loadedState.apis) {
+        Object.keys(loadedState.apis).forEach(apiKey => {
+            if (state.apis[apiKey]) {
+                state.apis[apiKey] = { ...loadedState.apis[apiKey] };
+            }
+        });
+    }
+
+    // Önbelleği geri yükle
+    if (loadedState.cache) {
+        Object.keys(loadedState.cache).forEach(cacheKey => {
+            if (state.cache.hasOwnProperty(cacheKey)) {
+                state.cache[cacheKey] = loadedState.cache[cacheKey];
+            }
+        });
+    }
+
+    console.log('🔄 State geri yüklendi (restored)');
+}
+
+/**
+ * State'i başlangıç değerlerine sıfırlar.
+ */
+export function resetState() {
+    // Sayaç ve tema
+    state.counter = 0;
+    state.theme = 'light';
+
+    // Otomatik yenileme (zamanlayıcıları durdurmak controller'ın işi)
+    state.autoRefresh.enabled = false;
+    state.autoRefresh.intervalId = null;
+    state.autoRefresh.countdownId = null;
+    state.autoRefresh.nextRefreshAt = null;
+
+    // Çekim durumu
+    state.fetchCount = 0;
+    state.isFetching = false;
+    state.abortController = null;
+
+    // API durumları
+    Object.keys(state.apis).forEach(apiKey => {
+        state.apis[apiKey] = {
+            status: 'idle',
+            data: null,
+            error: null,
+            lastFetchedAt: null
+        };
+    });
+
+    // Önbellek
+    Object.keys(state.cache).forEach(cacheKey => {
+        state.cache[cacheKey] = null;
+    });
+
+    console.log('🗑️ State sıfırlandı (reset)');
+}
+
 // Hata ayıklama için global erişim
 if (typeof window !== 'undefined') {
     window.appState = state;
 }
+

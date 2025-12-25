@@ -17,7 +17,7 @@ import { TR_STATUS } from '../state/appState.js';
 
 /**
  * Bir API kartının arayüzünü günceller.
- * @param {string} apiKey - API anahtarı (posts, weather, jokes)
+ * @param {string} apiKey - API anahtarı (users, weather, jokes)
  * @param {string} status - Durum (idle, loading, success, error)
  * @param {*} data - API'den gelen veri
  * @param {string} timestamp - Son çekim zamanı
@@ -91,24 +91,34 @@ function getContentHtml(apiKey, status, data, errorMsg) {
  */
 function renderApiData(apiKey, data) {
     switch (apiKey) {
-        case 'posts':
-            return data.map(post => `
-                <div class="post-item">
-                    <strong>${post.id}.</strong> ${post.title.substring(0, 50)}...
-                </div>
-            `).join('');
+        case 'users':
+            // Random User API verisini render et
+            if (data.results && Array.isArray(data.results)) {
+                return data.results.map(user => `
+                    <div class="user-item">
+                        <strong>${user.name.first} ${user.name.last}</strong>
+                        <span class="user-country">${user.location.country}</span>
+                        <small>${user.email}</small>
+                    </div>
+                `).join('');
+            }
+            return '<p>Kullanıcı verisi yüklenemedi</p>';
 
         case 'weather':
             const weather = data.current_weather;
+            const city = data.city || { name: 'Bilinmiyor', country: 'Bilinmiyor' };
             return `
                 <div class="weather-info">
+                    <div class="weather-city">
+                        📍 ${city.name} / ${city.country}
+                    </div>
                     <div class="weather-temp">${weather.temperature}°C</div>
                     <div class="weather-details">
-                        Rüzgar: ${weather.windspeed} km/s | 
-                        Kod: ${weather.weathercode}
+                        💨 Rüzgar: ${weather.windspeed} km/s | 
+                        🌡️ Kod: ${weather.weathercode}
                     </div>
-                    <div class="weather-details">
-                        Konum: İstanbul, Türkiye
+                    <div class="weather-coords">
+                        <small>Enlem: ${city.lat} | Boylam: ${city.lon}</small>
                     </div>
                 </div>
             `;
@@ -125,7 +135,7 @@ function renderApiData(apiKey, data) {
  * Tüm API kartlarını yükleniyor durumuna ayarlar.
  */
 export function setAllCardsLoading() {
-    ['posts', 'weather', 'jokes'].forEach(apiKey => {
+    ['users', 'weather', 'jokes'].forEach(apiKey => {
         renderApiCard(apiKey, 'loading');
     });
 }

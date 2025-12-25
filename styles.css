@@ -638,6 +638,129 @@ footer {
     font-size: 0.85rem;
 }
 
+/* ============================================
+   PERSISTENCE (KALICILIK) STİLLERİ
+   ============================================ */
+.persistence-card {
+    border: 2px dashed var(--accent);
+}
+
+.persistence-explanation {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.persistence-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--error), #dc2626);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.persistence-status {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    min-height: 2rem;
+}
+
+.persistence-status.success {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.persistence-status.error {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--error);
+}
+
+.persistence-status.reset {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+}
+
+.persistence-status.loaded {
+    background: rgba(67, 97, 238, 0.2);
+    color: var(--accent);
+}
+
+/* ============================================
+   ŞEHİR SEÇİCİ STİLLERİ
+   ============================================ */
+.city-selector-box {
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(124, 58, 237, 0.1));
+    border: 2px solid var(--accent);
+}
+
+.city-selector-box h4 {
+    color: var(--accent);
+}
+
+/* ============================================
+   KULLANICI LİSTESİ STİLLERİ
+   ============================================ */
+.user-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-item strong {
+    color: var(--accent);
+}
+
+.user-country {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.user-item small {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   HAVA DURUMU ŞEHİR STİLLERİ
+   ============================================ */
+.weather-city {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+}
+
+.weather-coords {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
 /* Duyarlı Tasarım */
 @media (max-width: 768px) {
     header h1 {

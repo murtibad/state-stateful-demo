@@ -1,9 +1,9 @@
 /**
  * ============================================
- * JSONPlaceholder API Modülü
+ * Random User API Modülü
  * ============================================
  * 
- * Bu dosya sadece JSONPlaceholder API iletişiminden sorumludur.
+ * Bu dosya sadece Random User API iletişiminden sorumludur.
  * Mikro mimari prensibi: Her API kendi dosyasında izole edilmiştir.
  * 
  * Sorumluluklar:
@@ -11,18 +11,23 @@
  * - HTTP isteği göndermek
  * - Yanıtı ayrıştırmak
  * - Hataları fırlatmak (UI mantığı ile ilgilenmez)
+ * 
+ * API Açıklaması:
+ * Random User API, rastgele kullanıcı profilleri oluşturur.
+ * Bu veri, gerçek dünya senaryolarında kullanıcı listesi,
+ * müşteri veritabanı vb. simülasyonu için kullanılabilir.
  */
 
-// API yapılandırması
-const API_URL = 'https://jsonplaceholder.typicode.com/posts?_limit=5';
+// API yapılandırması (5 rastgele kullanıcı çek)
+const API_URL = 'https://randomuser.me/api/?results=5&nat=tr,us,gb,de';
 
 /**
- * JSONPlaceholder'dan gönderi verilerini çeker.
+ * Random User API'den rastgele kullanıcı verilerini çeker.
  * @param {AbortSignal} signal - İstek iptali için sinyal
- * @returns {Promise<Array>} - Gönderi dizisi
+ * @returns {Promise<Object>} - Kullanıcı verileri
  * @throws {Error} - Ağ veya HTTP hatası
  */
-export async function fetchPosts(signal) {
+export async function fetchUsers(signal) {
     const response = await fetch(API_URL, { signal });
 
     if (!response.ok) {
@@ -34,7 +39,7 @@ export async function fetchPosts(signal) {
 
 // API bilgileri (dokümantasyon için)
 export const API_INFO = {
-    name: 'JSONPlaceholder Gönderiler',
+    name: 'Random User API (Kullanıcı Listesi)',
     url: API_URL,
-    description: '5 adet sahte blog gönderi başlığı ve özeti'
+    description: '5 adet rastgele kullanıcı profili (isim, e-posta, ülke)'
 };

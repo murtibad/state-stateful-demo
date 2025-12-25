@@ -49,8 +49,8 @@
                         demektir.</strong></p>
                 <p>Durumlu bir bileşen/sayfa, durum değiştiğinde görüntüsünü günceller ve kullanıcı etkileşimleri
                     arasında değerleri saklayabilir.</p>
-                <p class="example">➡️ <em>Örnek: Aşağıdaki otomatik yenileme düğmesi "durumlu (stateful)"dır çünkü açıp
-                        kapadığınızı hatırlar ve uygulama bu hafızaya göre farklı davranır.</em></p>
+                <p class="example">➡️ <em>Örnek: Aşağıdaki şehir seçici "durumlu (stateful)"dır çünkü seçimi hatırlar ve
+                        hava durumu API'sini buna göre günceller.</em></p>
             </div>
         </section>
 
@@ -83,6 +83,22 @@
                         <option value="dark">🌙 Koyu Tema</option>
                     </select>
                     <p class="stateful-note">Durumlu (stateful) çünkü: tema seçiminizi hatırlar</p>
+                </div>
+
+                <!-- Şehir Seçici (YENİ - STATEFUL) -->
+                <div class="control-item city-selector-box">
+                    <h4>🌍 Şehir Seçici (DURUMLU)</h4>
+                    <p class="explanation">Bu bir durumdur (state): <code>selectedCity</code> seçilen şehri saklar</p>
+                    <select id="city-selector" class="select-input">
+                        <option value="istanbul">🇹🇷 İstanbul</option>
+                        <option value="ankara">🇹🇷 Ankara</option>
+                        <option value="izmir">🇹🇷 İzmir</option>
+                        <option value="berlin">🇩🇪 Berlin</option>
+                        <option value="london">🇬🇧 Londra</option>
+                        <option value="paris">🇫🇷 Paris</option>
+                    </select>
+                    <p class="stateful-note">Durumlu (stateful) çünkü: şehir değiştiğinde hava durumu API'si otomatik
+                        güncellenir</p>
                 </div>
 
                 <!-- Otomatik Yenileme Düğmesi -->
@@ -118,17 +134,17 @@
             </p>
 
             <div class="api-grid">
-                <!-- API 1: JSONPlaceholder Gönderiler -->
-                <div class="api-card" id="api-posts">
+                <!-- API 1: Random User (Kullanıcı Listesi) -->
+                <div class="api-card" id="api-users">
                     <div class="api-header">
-                        <h4>📝 JSONPlaceholder Gönderiler</h4>
-                        <span class="status-badge" id="status-posts">Çekilmedi</span>
+                        <h4>👥 Random User API (Kullanıcı Listesi)</h4>
+                        <span class="status-badge" id="status-users">Çekilmedi</span>
                     </div>
-                    <div class="api-content" id="content-posts">
+                    <div class="api-content" id="content-users">
                         <p class="placeholder-text">Veri yüklemek için "Hepsini Çek" butonuna tıklayın...</p>
                     </div>
                     <div class="api-meta">
-                        <small>Son çekim: <span id="time-posts">Henüz hiç</span></small>
+                        <small>Son çekim: <span id="time-users">Henüz hiç</span></small>
                     </div>
                 </div>
 
@@ -169,9 +185,48 @@
             </div>
         </section>
 
-        <!-- BÖLÜM D: Durum Denetçisi -->
+        <!-- BÖLÜM D: State Kalıcılığı (Persistence) -->
+        <section id="persistence-section" class="card persistence-card">
+            <h2>💾 D) State Kalıcılığı (Persistence)</h2>
+            <p class="section-description">Bu bölüm, state'in tarayıcıda <strong>kalıcı</strong> olarak saklanmasını
+                gösterir. localStorage kullanılır.</p>
+
+            <div class="persistence-explanation">
+                <div class="concept-box">
+                    <h3>🔹 Kalıcılık Neden Önemli?</h3>
+                    <ul>
+                        <li><strong>"Veriyi Kaydet"</strong> butonu mevcut state'i localStorage'a kaydeder</li>
+                        <li>Sayfa <strong>F5 ile yenilendiğinde</strong> state geri yüklenir</li>
+                        <li>Seçilen <strong>şehir</strong>, <strong>sayaç</strong>, <strong>API verileri</strong>
+                            korunur</li>
+                        <li><strong>"State'i Sıfırla"</strong> butonu ile başlangıç haline dönülür</li>
+                    </ul>
+                </div>
+                <div class="concept-box">
+                    <h3>🔹 Stateful Davranış Kanıtı</h3>
+                    <p>Bu özellik, uygulamanın <strong>durumlu (stateful)</strong> olduğunun en güçlü kanıtıdır:</p>
+                    <ul>
+                        <li>Tarayıcı kapansa bile state korunur</li>
+                        <li>Kullanıcı tercihleri (şehir, tema) hatırlanır</li>
+                        <li>API verileri önbellekte saklanır</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="persistence-controls">
+                <button id="btn-save-state" class="btn btn-success">
+                    💾 Veriyi Kaydet
+                </button>
+                <button id="btn-reset-state" class="btn btn-danger">
+                    🗑️ State'i Sıfırla
+                </button>
+            </div>
+            <p id="persistence-status" class="persistence-status"></p>
+        </section>
+
+        <!-- BÖLÜM E: Durum Denetçisi -->
         <section id="state-inspector" class="card">
-            <h2>🔍 D) DURUM (State) Denetçisi (Canlı JSON Görünümü)</h2>
+            <h2>🔍 E) DURUM (State) Denetçisi (Canlı JSON Görünümü)</h2>
             <p class="section-description">Bu panel, <strong>tüm uygulama durumunu (state)</strong> gerçek zamanlı
                 güncellenen bir JSON nesnesi olarak gösterir. Yukarıdaki kontrollerle etkileşim kurduğunuzda değişmesini
                 izleyin!</p>
@@ -183,9 +238,9 @@
             </div>
         </section>
 
-        <!-- BÖLÜM E: Mikro Mimari Açıklaması -->
+        <!-- BÖLÜM F: Mikro Mimari Açıklaması -->
         <section id="micro-architecture" class="card architecture-section">
-            <h2>🏗️ E) Mikro Mimari (Modüler Yapı) Açıklaması</h2>
+            <h2>🏗️ F) Mikro Mimari (Modüler Yapı) Açıklaması</h2>
             <p class="section-description">Bu proje, <strong>mikro mimari</strong> (modüler yapı) prensiplerine göre
                 tasarlanmıştır. Tek bir monolitik dosya yerine, sorumluluklar farklı katmanlara ayrılmıştır.</p>
 
@@ -193,50 +248,37 @@
                 <pre class="folder-structure">
 📁 3api+statestatefull/
 ├── 📁 apis/                      ← API Katmanı (Veri Kaynakları)
-│   ├── jsonPlaceholderApi.js     → Sadece JSONPlaceholder ile iletişim
-│   ├── weatherApi.js             → Sadece Open-Meteo ile iletişim
-│   └── jokeApi.js                → Sadece ICanHazDadJoke ile iletişim
+│   ├── randomUserApi.js          → Kullanıcı listesi verisi
+│   ├── weatherApi.js             → Hava durumu + şehir seçimi
+│   └── jokeApi.js                → Fıkra API'si
 │
 ├── 📁 state/                     ← Durum Yönetimi Katmanı
-│   └── appState.js               → Merkezi durum nesnesi ve güncelleme fonksiyonları
+│   └── appState.js               → Merkezi state + getter/setter
 │
 ├── 📁 ui/                        ← UI / Görünüm Katmanı
-│   ├── renderCards.js            → API kartlarını ekrana çizer
-│   └── renderStateInspector.js   → Durum denetçisini ve sayaçları çizer
+│   ├── renderCards.js            → API kartlarını çizer
+│   └── renderStateInspector.js   → Durum denetçisini çizer
 │
-├── main.js                       ← Kontrolcü / Orkestrasyon Katmanı
-├── index.html                    → Ana HTML sayfası
-├── styles.css                    → CSS stilleri
-└── README.md                     → Dokümantasyon
+├── 📁 persistence/               ← Kalıcılık Katmanı
+│   └── storage.js                → localStorage işlemleri
+│
+├── main.js                       ← Kontrolcü / Orkestrasyon
+├── index.html, styles.css, README.md
                 </pre>
             </div>
 
             <div class="architecture-explanation">
                 <h4>🔹 Neden API'ler Ayrı Dosyalarda?</h4>
-                <p>Her API kendi dosyasında izole edilmiştir çünkü:</p>
                 <ul>
                     <li><strong>Tek Sorumluluk:</strong> Her dosya sadece bir API ile ilgilenir</li>
                     <li><strong>Bakım Kolaylığı:</strong> Bir API değişirse sadece o dosya güncellenir</li>
                     <li><strong>Test Edilebilirlik:</strong> Her API bağımsız olarak test edilebilir</li>
-                    <li><strong>Yeniden Kullanılabilirlik:</strong> API modülleri başka projelerde kullanılabilir</li>
                 </ul>
 
-                <h4>🔹 Neden Durum (State) Merkezi?</h4>
-                <p>Tüm uygulama durumu tek bir yerde tutulur çünkü:</p>
+                <h4>🔹 Neden Persistence Ayrı Katmanda?</h4>
                 <ul>
-                    <li><strong>Tek Doğruluk Kaynağı:</strong> Durum tutarsızlıkları önlenir</li>
-                    <li><strong>Kontrollü Erişim:</strong> Durum sadece özel fonksiyonlarla değiştirilir</li>
-                    <li><strong>Hata Ayıklama:</strong> Durumu tek noktadan izlemek kolaydır</li>
-                    <li><strong>Öngörülebilirlik:</strong> Uygulama davranışı tahmin edilebilir olur</li>
-                </ul>
-
-                <h4>🔹 Bakım ve Okunabilirlik Nasıl İyileşir?</h4>
-                <p>Modüler yapı sayesinde:</p>
-                <ul>
-                    <li>Her dosya <strong>50-100 satır</strong> civarındadır (anlaşılması kolay)</li>
-                    <li>Yeni geliştirici projeyi hızlıca öğrenebilir</li>
-                    <li>Hata bulma süreci kısalır (sorun hangi katmanda?)</li>
-                    <li>Ekip çalışması kolaylaşır (farklı kişiler farklı katmanlarda çalışabilir)</li>
+                    <li><strong>İzolasyon:</strong> localStorage mantığı UI'dan ayrı</li>
+                    <li><strong>Değiştirilebilirlik:</strong> İleride IndexedDB'ye geçiş kolay</li>
                 </ul>
             </div>
 
@@ -258,12 +300,17 @@
                         <tr>
                             <td><strong>State</strong></td>
                             <td><code>state/appState.js</code></td>
-                            <td>Uygulama verilerini saklama ve yönetme</td>
+                            <td>Uygulama verilerini saklama</td>
                         </tr>
                         <tr>
                             <td><strong>UI</strong></td>
                             <td><code>ui/*.js</code></td>
                             <td>Ekrana çizim yapma</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Persistence</strong></td>
+                            <td><code>persistence/*.js</code></td>
+                            <td>localStorage işlemleri</td>
                         </tr>
                         <tr>
                             <td><strong>Controller</strong></td>
@@ -275,9 +322,9 @@
             </div>
         </section>
 
-        <!-- BÖLÜM F: Kullanılan API'ler -->
+        <!-- BÖLÜM G: Kullanılan API'ler -->
         <section id="apis-used" class="card">
-            <h2>📋 F) Kullanılan API'ler</h2>
+            <h2>📋 G) Kullanılan API'ler</h2>
             <p class="section-description">Bu demoda kullanılan 3 ücretsiz genel API'nin dokümantasyonu:</p>
 
             <table class="api-table">
@@ -286,29 +333,23 @@
                         <th>API Adı</th>
                         <th>Endpoint URL</th>
                         <th>Gösterilen Veri</th>
-                        <th>Ne Zaman/Nasıl Çekilir</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>JSONPlaceholder</strong></td>
-                        <td><code>https://jsonplaceholder.typicode.com/posts?_limit=5</code></td>
-                        <td>5 adet sahte blog gönderi başlığı ve özeti</td>
-                        <td>"Hepsini Çek" tıklandığında, API anahtarı gerekmeden <code>fetch()</code> ile çekilir</td>
+                        <td><strong>Random User</strong></td>
+                        <td><code>randomuser.me/api/?results=5</code></td>
+                        <td>5 adet rastgele kullanıcı profili (isim, e-posta, ülke)</td>
                     </tr>
                     <tr>
                         <td><strong>Open-Meteo</strong></td>
-                        <td><code>https://api.open-meteo.com/v1/forecast?latitude=41.01&longitude=28.95&current_weather=true</code>
-                        </td>
-                        <td>İstanbul için anlık hava durumu (sıcaklık, rüzgar hızı, hava kodu)</td>
-                        <td>"Hepsini Çek" tıklandığında, API anahtarı gerekmeden <code>fetch()</code> ile çekilir</td>
+                        <td><code>api.open-meteo.com/v1/forecast</code></td>
+                        <td>Seçilen şehir için anlık hava durumu (sıcaklık, rüzgar)</td>
                     </tr>
                     <tr>
                         <td><strong>ICanHazDadJoke</strong></td>
-                        <td><code>https://icanhazdadjoke.com/</code></td>
-                        <td>Rastgele bir baba fıkrası (İngilizce - API'den gelen orijinal veri)</td>
-                        <td>"Hepsini Çek" tıklandığında, <code>Accept: application/json</code> başlığı ile, API anahtarı
-                            gerekmeden <code>fetch()</code> ile çekilir</td>
+                        <td><code>icanhazdadjoke.com</code></td>
+                        <td>Rastgele bir baba fıkrası (İngilizce)</td>
                     </tr>
                 </tbody>
             </table>
@@ -316,20 +357,17 @@
             <div class="api-notes">
                 <h4>Teknik Notlar:</h4>
                 <ul>
-                    <li>3 API'nin hepsi <code>Promise.allSettled()</code> kullanılarak <strong>paralel</strong> olarak
-                        çekilir</li>
-                    <li>Hızlı yeniden çekimlerde devam eden istekleri iptal etmek için <code>AbortController</code>
-                        kullanılır</li>
-                    <li>Her API'nin yanıtı, <code>lastFetchedAt</code> zaman damgası ile birlikte durumda (state)
-                        önbelleğe alınır</li>
-                    <li>Hız sınırlaması ve ağ hataları, hata mesajları ile zarif bir şekilde işlenir</li>
+                    <li>3 API'nin hepsi <code>Promise.allSettled()</code> ile <strong>paralel</strong> çekilir</li>
+                    <li><code>AbortController</code> ile devam eden istekler iptal edilebilir</li>
+                    <li>Şehir değiştiğinde sadece hava durumu API'si yeniden çağrılır</li>
+                    <li>State kalıcılığı için <code>localStorage</code> kullanılır</li>
                 </ul>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>Eğitim amaçlı oluşturulmuştur | DURUM (State) & DURUMLU (Stateful) + Mikro Mimari | GitHub Pages Dağıtımı</p>
+        <p>Eğitim amaçlı oluşturulmuştur | DURUM (State) & DURUMLU (Stateful) + Mikro Mimari | GitHub Pages</p>
     </footer>
 
     <!-- ES Modülleri kullanarak ana kontrolcüyü yükle -->
